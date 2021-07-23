@@ -35,6 +35,7 @@
 
   main {
     flex: 8;
+    height: 100%;
 
     padding: 0 32px;
 
@@ -148,9 +149,9 @@
 @media (max-width: 950px) {
   #page-auth {
     flex-direction: column;
+    height: 100%;
 
     aside {
-      flex: 1;
       padding: 40px 20px;
       align-items: center;
       text-align: center;
@@ -162,7 +163,6 @@
     }
 
     main {
-      flex: 1;
       margin: 64px 0;
     }
   }
