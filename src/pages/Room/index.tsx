@@ -6,6 +6,7 @@ import { database } from '../../services/firebase';
 
 import { Button } from '../../components/Button';
 import { RoomCode } from '../../components/RoomCode';
+import { Question } from '../Question';
 
 import logoImg from '../../assets/images/logo.svg';
 
@@ -21,6 +22,18 @@ type FirebaseQuestion = Record<string, {
     isAnswered: boolean;
 }>
 
+type QuestionsType = {
+    id: string;
+    author: {
+        name: string;
+        avatar: string;
+    }
+    content: string;
+    isHighLighted: boolean;
+    isAnswered: boolean;
+
+}
+
 type RoomParams = {
     id: string;
 }
@@ -29,6 +42,8 @@ export function Room() {
     const { user } = useAuth();
     const params = useParams<RoomParams>();
     const [newQuestion, setNewQuestion] = useState('');
+    const [questions, setQuestions] = useState<QuestionsType[]>([])
+    const [title, setTitle] = useState('');
     
     const roomId = params.id;
 
@@ -37,20 +52,20 @@ export function Room() {
 
         roomRef.once('value', room => {
             const databaseRoom = room.val();
-            console.log(databaseRoom)
-            // const firebaseQuestions: FirebaseQuestion = databaseRoom.questions ?? {};
+            const firebaseQuestions: FirebaseQuestion = databaseRoom.questions ?? {};
 
-            // const parsedQuestions = Object.entries(firebaseQuestions).map(([key, value]) => {
-            //     return {
-            //         id: key,
-            //         content: value.content,
-            //         author: value.author,
-            //         isHighLighted: value.isHighLighted,
-            //         isAnswered: value.isAnswered,
-            //     };
-            // }); 
-            
-            // console.log(parsedQuestions)
+            const parsedQuestions = Object.entries(firebaseQuestions).map(([key, value]) => {
+                return {
+                    id: key,
+                    content: value.content,
+                    author: value.author,
+                    isHighLighted: value.isHighLighted,
+                    isAnswered: value.isAnswered,
+                };
+            });
+
+            setTitle(databaseRoom.title);
+            setQuestions(parsedQuestions);
         });
     }, [roomId]);
     
@@ -91,8 +106,8 @@ export function Room() {
 
             <main className="content">
                 <div className="room-title">
-                    <h1>Sala React</h1>
-                    <span>4 perguntas</span>
+                    <h1>{title}</h1>
+                    {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
                 </div>
 
                 <form onSubmit={handleSendQuestion}> 
@@ -114,7 +129,20 @@ export function Room() {
                         <Button>Enviar Pergunta</Button>
                     </div>
                 </form>
+
+                <div className="question-list">
+                    {questions.map(question => {
+                        return (
+                            <Question 
+                            key={question.id}
+                            content={question.content}
+                            author={question.author}
+                            />
+                        );
+                    })}
+                </div>
             </main>
+            
         </div>
     );
 };
