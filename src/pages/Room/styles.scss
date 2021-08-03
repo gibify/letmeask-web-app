@@ -101,3 +101,52 @@
         }
     }
 }
+
+@media (max-width: 890px) {
+    #page-room {
+        main {
+            padding: 16px;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    #page-room {
+       header {
+           padding: 16px;
+
+           .content {
+               flex-direction: column;
+
+               > img {
+                margin-bottom: 16px;
+            }
+           }
+       }
+
+       main {
+           .room-title {
+               flex-direction: column;
+
+               h1 {
+                   margin-bottom: 16px;
+               }
+
+               span {
+                   margin-left: 0;
+               }
+           }
+       }
+
+       form {
+           .form-footer {
+               flex-direction: column;
+
+               .user-info {
+                   margin-bottom: 16px;
+               }
+
+           }
+       }
+    }
+}
